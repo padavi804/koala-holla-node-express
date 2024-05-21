@@ -20,8 +20,7 @@ function getKoalas(){
 
 function saveKoala(){
   console.log( 'in saveKoala' );
-  // axios call to server to get koalas
- 
+  // axios call to server to get koalas 
 }
 
 getKoalas();
@@ -48,8 +47,8 @@ let payload = {
 
 // post to server
 axios.post('/koalas', payload)
-  .then(function (result){
-    console.log(result);
+  .then(function (response){
+    console.log('this is the result of the POST', response);
     // clear inputs
     document.querySelector('#nameIn').value = '';
     document.querySelector('#ageIn').value = '';
@@ -57,8 +56,9 @@ axios.post('/koalas', payload)
     document.querySelector('#readyForTransferIn').value = '';
     document.querySelector('#notesIn').value = '';
 
+    // refresh calculation history
     getKoalas();
-  })
+    })
 .catch(function(error){
   console.log('failed to post new koala', error);
   alert('something went wrong posting new koala');
