@@ -7,7 +7,7 @@ app.use(express.json());
 app.use(express.static('server/public'));
 
 // ROUTES
-app.use('/koalas', koalaRouter);
+
 
 let koalaList = require('./modules/koalaList');
 
