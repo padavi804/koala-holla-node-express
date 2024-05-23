@@ -1,24 +1,83 @@
 const express = require('express');
-const koalaRouter = express.Router();
-let koalaList = require('../modules/koalaList');
+// const koalaRouter = express.Router();
+const router = express.Router();
+// let koalaList = require('../modules/koalaList');
 // DB CONNECTION
+const pg = require('pg');
 
+const pool = new pg.Pool({
+    database: 'koalas',
+    host: 'localhost',
+    port: 5432
+});
 
 // GET
-koalaRouter.get('/', (req,res) => {
-console.log('GET request made for /koalas');
-res.send(koalaList);
+router.get('/', (req, res) => {
+    let queryText = 'SELECT * FROM "koalas";';
+    // send it to the database
+    pool.query(queryText)
+        .then((dbResult) => {
+            // unpack the good results
+            // dbResult is a big object, with lots of extra data
+            // console.log('dbResult:', dbResult);
+            // console.log('dbResult.rows:', dbResult.rows);
+
+            // almost always, you care about the dbResult.rows
+
+            let koalas = dbResult.rows;
+
+            // send the client a response, based on the results.
+            res.send(koalas);
+        })
+        .catch((dbError) => {
+            // unpack the bad results
+            console.log('dbError:', dbError);
+            // send the client a response, based on the results.
+            res.sendStatus(500);
+        })
 })
 
+// OLD GET REQUEST
+// koalaRouter.get('/', (req,res) => {
+// console.log('GET request made for /koalas');
+// res.send(koalaList);
+// })
+
 // POST
-koalaRouter.post('/', (req, res) => {
-    console.log('POST /koalas received a request');
-    res.sendStatus(201);
+router.post('/', (req, res) => {
+    let newKoala = req.body;
+    let name = newKoala.name;
+    let age = newKoala.age;
+    let color = newKoala.color;
+    let transfer = newKoala.transfer;
+    let notes = newKoala.notes;
+
+    let queryText = `INSERT INTO "koalas" ("name", "age", "color","transfer", "notes") 
+VALUES ($1, $2, $3, $4, $5);`
+pool.query(queryText, [name, age, color, transfer, notes])
+        .then(dbResult => {
+            // unpack the results
+            console.log('dbResult.rows', dbResult.rows);
+            // send the client a response, based on the results.
+            res.sendStatus(201);
+        })
+        .catch(dbError => {
+            // unpack the results
+            console.log('dbError:', dbError);
+            // send the client a response, based on the results.
+            res.sendStatus(500);
+        })
 });
+
+// // OLD POST REQUEST
+// koalaRouter.post('/', (req, res) => {
+//     console.log('POST /koalas received a request');
+//     res.sendStatus(201);
+// });
 
 // PUT
 
 
 // DELETE
 
-module.exports = koalaRouter;
+// module.exports = koalaRouter;
