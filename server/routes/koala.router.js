@@ -76,8 +76,27 @@ pool.query(queryText, [name, age, color, transfer, notes])
 // });
 
 // PUT
+router.put('/:id', (req, res) => {
+    console.log(req.params);
+    console.log(req.body);
+    let transfer = req.body.transfer;
 
+    let queryText;
+    if(transfer === true) {
+        transfer = false;
+        queryText = 'UPDATE "koalas" SET transfer=false WHERE id=$1;';
+    }else if(transfer === false) {
+        queryText = 'UPDATE "koalas" SET transfer=true WHERE id=$1;';
+        transfer = true;
+    }
+
+    console.log(transfer);
+    res.sendStatus(200);
+
+});
+
+//make this get rid of the button in client.js
 
 // DELETE
 
-// module.exports = koalaRouter;
+module.exports = router;

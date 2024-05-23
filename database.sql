@@ -1,9 +1,9 @@
 CREATE TABLE "koalas" (
-	"id" SERIAL PRIMARY KEY,
-	"name" VARCHAR,
+    "id" SERIAL PRIMARY KEY,
+	"name" VARCHAR (250),
 	"age" INTEGER,
-	"color" VARCHAR,
-	"transfer" VARCHAR,
+	"color" VARCHAR (250),
+	"transfer" BOOLEAN,
 	"notes" VARCHAR (250)
 	);
 	
