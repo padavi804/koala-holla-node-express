@@ -22,6 +22,7 @@ function renderKoalas(koalaList) {
   // console.log('koala list', koalaList);
   viewKoalas.innerHTML = '';
   for (let bears of koalaList) {
+    if(bears.transfer === true) {
     viewKoalas.innerHTML += `
     <tr>      
       <td>${bears.name}</td>
@@ -29,8 +30,19 @@ function renderKoalas(koalaList) {
       <td>${bears.color}</td>
       <td>${bears.transfer}</td>
       <td>${bears.notes}</td>
-      <td><button onClick=transfer(${bears.id},${bears.transfer})>Complete Transfer</button></td>
+      <td><button onClick=transfer(${bears.id},${bears.transfer}) >Ready for Transfer</button></td>
     </tr>`;
+    } else if (bears.transfer === false){
+      viewKoalas.innerHTML += `
+      <tr>      
+        <td>${bears.name}</td>
+        <td>${bears.age}</td>
+        <td>${bears.color}</td>
+        <td>${bears.transfer}</td>
+        <td>${bears.notes}</td>
+        <td><button onClick=transfer(${bears.id},${bears.transfer}) hidden >Ready for Transfer</button></td>
+      </tr>`;
+    }
   }
 }
 
@@ -92,6 +104,7 @@ function transfer(koalaId, transfer){
   axios.put(`/koalas/${koalaId}`, payloadObject)
     .then(response => {
       console.log('this is a console log', koalaId);
+
       getKoalas();
     })
     .catch(error => {

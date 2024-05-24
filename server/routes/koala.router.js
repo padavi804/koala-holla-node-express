@@ -17,13 +17,8 @@ router.get('/', (req, res) => {
     // send it to the database
     pool.query(queryText)
         .then((dbResult) => {
-            // unpack the good results
-            // dbResult is a big object, with lots of extra data
             // console.log('dbResult:', dbResult);
-            // console.log('dbResult.rows:', dbResult.rows);
-
-            // almost always, you care about the dbResult.rows
-
+           
             let koalas = dbResult.rows;
 
             // send the client a response, based on the results.
@@ -79,6 +74,7 @@ pool.query(queryText, [name, age, color, transfer, notes])
 router.put('/:id', (req, res) => {
     console.log(req.params);
     console.log(req.body);
+    let idToupdate = req.params.id;
     let transfer = req.body.transfer;
 
     let queryText;
@@ -88,10 +84,21 @@ router.put('/:id', (req, res) => {
     }else if(transfer === false) {
         queryText = 'UPDATE "koalas" SET transfer=true WHERE id=$1;';
         transfer = true;
+        res.sendStatus(400);
     }
 
-    console.log(transfer);
-    res.sendStatus(200);
+    console.log('transfer after if:', transfer);
+
+    pool.query(queryText, [idToupdate])
+    .then(dbResult => {
+        console.log(dbResult);
+        res.sendStatus(200);
+        
+    })
+    .catch(dbError => {
+        console.log(dbError);
+        res.sendStatus(500);
+    })
 
 });
 
